@@ -15,11 +15,10 @@ let Authors = db.authors;
 let Photos = db.photos;
 
 
-router.get('/', (req, res) =>{
-    console.log(req.user);
+router.get('/', (req, res) => {
+  console.log('get route');
   Photos.findAll({ include: { model: Authors } })
   .then( photos => {
-    console.log(req.user);
     let photosObj = {
       photos: photos
     };
@@ -70,7 +69,7 @@ router.get('/gallery/:id/edit', (req, res) => {
 });
 
 
-router.post('/gallery', (req, res) => {
+router.post('/gallery', Utilities.isAuthenticated, (req, res) => {
   findAuthor(req, res)
   .then( author => {
     Photos.create(

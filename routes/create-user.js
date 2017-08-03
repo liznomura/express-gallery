@@ -22,7 +22,7 @@ router.post('/create-user', (req, res) => {
       password: req.body.password }
       )
   .then( user => {
-    res.redirect('/');
+    res.redirect('/login');
   })
   .catch( err => {
     console.log(err);
