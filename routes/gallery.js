@@ -16,9 +16,9 @@ let Photos = db.photos;
 
 
 router.get('/', (req, res) => {
-  console.log('get route');
   Photos.findAll({ include: { model: Authors } })
   .then( photos => {
+    console.log(photos[0].dataValues);
     let photosObj = {
       photos: photos
     };
@@ -58,7 +58,7 @@ router.get('/gallery/:id', (req, res) => {
 
 router.get('/gallery/:id/edit', (req, res) => {
   findPhoto(req, res)
-  .then( photo =>  {
+  .then( photo => {
     let photoObj = {
       author_id: photo.author_id,
       link: photo.link

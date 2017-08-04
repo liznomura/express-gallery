@@ -12,12 +12,7 @@ let Photos = db.photos;
 
 
 function isAuthenticated(req, res, next){
-  console.log(req.user);
-  console.log(req.isAuthenticated());
-  if(req.isAuthenticated()){
-    console.log('i am authenticated');
-      return next();
-  }
+  if(req.isAuthenticated()) { return next(); }
   res.redirect('/login');
 }
 

@@ -20,8 +20,12 @@ router.post('/login', passport.authenticate('local', {
 }));
 
 router.get('/success', Utilities.isAuthenticated, (req, res) => {
-  console.log('hi');
   res.render('./templates/success-login', { username: req.user.username });
+});
+
+router.get('/logout', (req, res) => {
+  req.logout();
+  res.sendStatus(200);
 });
 
 module.exports = router;
