@@ -18,7 +18,6 @@ let Photos = db.photos;
 router.get('/', (req, res) => {
   Photos.findAll({ include: { model: Authors } })
   .then( photos => {
-    console.log(photos[0].dataValues);
     let photosObj = {
       photos: photos
     };
@@ -36,34 +35,13 @@ router.get('/gallery/:id', (req, res) => {
   let photoId = req.params.id;
   Photos.findAll({ include: { model: Users } })
   .then( photos => {
-    let mainPhoto = photos.filter((photo)=> {
-      if(photo.id == photoId){
-        return photo;
-      }
-    });
-
-    let otherPhotos = photos.filter((photo)=> {
-      if(photo.id != photoId){
-        return photo;
-      }
-    });
-
-    let photosObj = {
-      photo: mainPhoto,
-      photos: otherPhotos
-    };
-    res.render('./templates/photo', photosObj);
+    res.redirect('/');
   });
 });
 
 router.get('/gallery/:id/edit', (req, res) => {
   findPhoto(req, res)
   .then( photo => {
-    let photoObj = {
-      author_id: photo.author_id,
-      link: photo.link
-    };
-    console.log(photoObj);
     res.render('./templates/edit', photo);
   });
 });
@@ -132,6 +110,6 @@ function findPhoto( req, res ) {
   let photoId = req.params.id;
   return Photos.findOne({
     where: {id: photoId },
-    include: {model: Users}
+    include: [{model: Users}, {model: Authors}]
   });
 }
