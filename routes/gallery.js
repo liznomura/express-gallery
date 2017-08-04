@@ -61,7 +61,7 @@ passport.use(new LocalStrategy((username,password, done)=>{
 
 
 router.get('/', (req, res) =>{
-  Photos.findAll({ include: { model: Users } })
+  Photos.findAll({ include: { model: Authors } })
   .then( photos => {
     let photosObj = {
       photos: photos
@@ -82,8 +82,6 @@ router.post('/login', passport.authenticate('local',{
   successRedirect: '/success',
   failureRedirect: '/login'
 }));
-
-
 
 router.get('/gallery/new', ( req, res ) => {
   res.render('./templates/new');
@@ -126,7 +124,6 @@ router.get('/gallery/:id/edit', isAuthenticated, (req, res) =>{
       author_id: photo.author_id,
       link: photo.link
     };
-    console.log(photoObj);
     res.render('./templates/edit', photo);
   });
 });
@@ -150,16 +147,16 @@ router.post('/gallery', isAuthenticated, (req, res) => {
 
 
 router.put('/gallery/:id', isAuthenticated, (req, res) => {
-  let photoId = req.params.id;
   findAuthor(req, res)
   .then( author => {
+    console.log('put method', author);
     Photos.update(
     { author_id: author.id,
       user_id: req.user.id,
       link: req.body.link,
       description: req.body.description
     },
-    { where: { id: photoId } });
+    { where: { id: req.body } });
   });
   res.redirect(`/gallery/${req.params.id}`)
   .catch(err => {
@@ -170,12 +167,9 @@ router.put('/gallery/:id', isAuthenticated, (req, res) => {
 
 router.delete('/gallery/:id', isAuthenticated, (req, res) => {
   let photoId = req.params.id;
+  console.log("here", photoId);
   Photos.destroy({ where: {id: photoId} });
-  res.redirect('/')
-  .catch( err => {
-    console.log(err);
-  });
-
+  res.redirect('/');
 });
 
 module.exports = router;
@@ -204,6 +198,7 @@ function findPhoto( req, res ) {
 
 function isAuthenticated(req, res, next){
   if(req.isAuthenticated()){
+    console.log('beeeeeeeep');
     return next();
   }
   res.redirect('/');

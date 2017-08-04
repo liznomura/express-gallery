@@ -9,9 +9,13 @@
       <p>Description: {{description}}</p>
     </div>
     <div class="deleteBtn">
-      <form action="/gallery/{{id}}?_method=DELETE" method="POST">
+      <!-- <form action="/gallery/{{id}}?_method=DELETE" method="POST">
         <input type="hidden" name="id" value={{id}}>
         <button type="submit">Remove</button>
+      </form> -->
+      <form method="POST" action="/gallery/{{id}}">
+        <input type="hidden" name="_method" value="DELETE">
+        <button type="submit">Delete</button>
       </form>
     </div>
     <div class="editBtn">
