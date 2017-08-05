@@ -1,41 +1,157 @@
 $dark-text: #888;
 $text: #c7c7c7;
+$border: #ddd;
 
 body {
-  font-family: arial, verdana, georgia;
-  font-size: 12px;
+  font: {
+    family: arial, verdana, georgia;
+    size: 12px;
+  }
   color: $text;
 }
 
+
 h1 {
-  font-size: 70px;
-  color: $dark-text;
+  font: {
+    size: 70px;
+  }
   letter-spacing: 0.1em;
+  color: $dark-text;
   margin: 0;
 }
 
+
 .container {
   margin: 50px auto;
-  width: 50%;
+  width: 80%;
 }
+
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-top: 1px dotted #ddd;
+  border-top: 1px dotted $border;
   padding: 0;
   margin-bottom: 80px;
+
+  .logo {
+    padding: 10px 0;
+    margin-right: 20px;
+  }
+
+  .welcome {
+    width: 40%;
+    margin: 10px 0;
+    padding: 0 15px;
+    border-left: 1px solid $border;
+  }
 }
 
-.logo {
-  padding: 10px 0;
-  margin-right: 20px;
+.galleryIndex {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  .image {
+
+    &:first-child {
+      text-align: center;
+      max-height: 500px;
+      padding-bottom: 10px;
+      width: 100%;
+      border-bottom: 1px solid $border;
+
+      p {
+        display: none;
+      }
+    }
+
+
+    &~.image {
+      height: 200px;
+      max-width: 32.5%;
+      overflow: hidden;
+
+
+      p {
+        margin: 0;
+        color: $dark-text;
+      }
+
+      img {
+        margin-bottom: 10px;
+      }
+
+      &:nth-child(2n) {
+        margin: 10px 0;
+      }
+
+      &:nth-child(odd) {
+        margin: 10px 5px;
+      }
+
+      &:nth-child(n + 5) {
+        border: none;
+      }
+    }
+  }
 }
 
-.welcome {
-  width: 40%;
-  margin: 10px 0;
-  padding: 0 15px;
-  border-left: 1px solid #ddd;
+
+.galleryDetail {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+
+
+  .image {
+    display: inline-block;
+    position: relative;
+    margin: 0;
+    height: auto;
+    width: 100%;
+    max-height: 400px;
+    overflow: hidden;
+
+    .overlay {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: rgba(0, 0, 0, 0);
+      transition: background 0.5s ease;
+
+      img {
+        max-width: 100%;
+        max-height: 200px;
+      }
+
+      button {
+        opacity: 0;
+        margin-right: 20px;
+        background: transparent;
+        border: 2px solid white;
+        color: white;
+        transition: all 0.5s ease;
+      }
+
+      button ~ button {
+        margin: 0;
+      }
+    }
+
+    &:hover .overlay {
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    &:hover .overlay button {
+      opacity: 1;
+      cursor: pointer;
+    }
+  }
 }

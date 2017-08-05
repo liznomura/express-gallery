@@ -1,26 +1,12 @@
-<div class="gallery">
-  <div class="btn">
-    <button type="button" onclick="location.href='./gallery/new'">Upload a Photo</button>
-    {{#if photos}}
-    {{#each photos}}
-    <div class="photo">
-      <img src='{{link}}' alt='img'>
-      <p>Author: {{user.author}}</p>
-      <p>Description: {{description}}</p>
-    </div>
-    <div class="deleteBtn">
-      <form action="/gallery/{{id}}?_method=DELETE" method="POST">
-        <input type="hidden" name="id" value={{id}}>
-        <button type="submit">Remove</button>
-      </form>
-    </div>
-    <div class="editBtn">
-      <a href="/gallery/{{id}}/edit">
-        <button type="button">Edit</button>
-      </a>
-    </div>
-    {{/each}}
-    {{else}}
-    <p>No photos to display</p>
-    {{/if}}
+<div class="galleryIndex">
+  {{#if photos}}
+  {{#each photos}}
+  <div class="image">
+    <a href='/gallery/{{id}}'><img src='{{link}}' alt='img'></a>
+    <p>{{title}}</p>
   </div>
+  {{/each}}
+  {{else}}
+  <p>No photos to display</p>
+  {{/if}}
+</div>
