@@ -17,17 +17,7 @@ let Photos = db.photos;
 
 
 router.get('/', (req, res) => {
-  Photos.findAll({ include: { model: Authors } })
-  .then( photosList => {
-
-    let photos = [];
-
-    photosList.forEach( photo => {
-      return photos.push({ id: photo.id, title: photo.title, link: photo.link, description: photo.description, user_id: photo.user_id, author_id: photo.author_id, author: photo.author.author });
-    });
-
-    return photos;
-  })
+  findAllPhotos(req, res)
   .then(photos => {
     let photosObj = { photos: photos };
     res.render('./templates/index', photosObj);
@@ -60,13 +50,22 @@ router.get('/success', Utilities.isAuthenticated, (req, res) =>{
 
 
 router.get('/gallery/:id', (req, res) => {
-  let photoId = req.params.id;
-  Photos.findById(photoId, { include: [Authors] })
-  .then( photo => {
+  findAllPhotos(req, res)
+  .then( photos =>{
+    let photoId = parseInt(req.params.id);
+
+    let mainPhoto = photos.filter( photo => { return photoId === photo.id; });
+    let otherPhotos = photos.filter( photo => { return photoId !== photo.id; });
+
     let photoObj = {
-      photo: photo
+      mainPhoto: mainPhoto,
+      otherPhotos: otherPhotos
     };
+
     res.render('./templates/photo', photoObj);
+  })
+  .catch( err =>{
+    console.log(err);
   });
 });
 
@@ -145,6 +144,27 @@ function findAuthor( req, res ) {
         {author: req.body.author}
         );
     }
+  });
+}
+
+function findAllPhotos( req, res ) {
+  return Photos.findAll({ include: { model: Authors } })
+  .then( photosList => {
+
+    let photos = [];
+
+    photosList.forEach( photo => {
+      return photos.push({
+        id: photo.id,
+        title: photo.title,
+        link: photo.link,
+        description: photo.description,
+        user_id: photo.user_id,
+        author_id: photo.author_id,
+        author: photo.author.author });
+    });
+
+    return photos;
   });
 }
 

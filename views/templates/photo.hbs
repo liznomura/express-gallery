@@ -1,18 +1,27 @@
 <div class="galleryDetail">
   <div class="photoContainer">
+    {{#each mainPhoto}}
     <div class="image">
-      <img src='{{photo.link}}' alt='img'>
+      <img src='{{link}}' alt='img'>
       <div class="overlay">
-        <form action="/gallery/{{photo.id}}?_method=DELETE" method="POST">
-          <input type="hidden" name="id" value={{photo.id}}>
+        <form action="/gallery/{{id}}?_method=DELETE" method="POST">
+          <input type="hidden" name="id" value={{id}}>
           <button type="submit">Remove</button>
         </form>
         <a href="/gallery/{{photo.id}}/edit"><button type="button">Edit</button></a>
       </div>
     </div>
     <div class="text">
-      <p>Author: {{photo.author.author}}</p>
-      <p>Description: {{photo.description}}</p>
+      <p>Author: {{author}}</p>
+      <p>Description: {{description}}</p>
     </div>
+    {{/each}}
+  </div>
+  <div class="otherPhotos">
+    {{#each otherPhotos}}
+    <div class="image"><img src='{{link}}' alt='img'></div>
+    <div class="text"><p>Author: {{author}}</p></div>
+    {{!-- need to add shortened link later --}}
+    {{/each}}
   </div>
 </div>
