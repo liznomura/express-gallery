@@ -29,36 +29,71 @@ h1 {
     padding: 0 15px;
     border-left: 1px solid #ddd; }
 
-.gallery {
+.galleryIndex {
   display: flex;
-  justify-content: flex-start; }
-
-.image {
-  display: inline-block;
-  position: relative;
-  margin: 0;
-  height: auto;
-  width: auto;
-  overflow: hidden; }
-  .image .overlay {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
+  flex-wrap: wrap;
+  justify-content: space-between; }
+  .galleryIndex .image:first-child {
+    text-align: center;
+    max-height: 500px;
+    padding-bottom: 10px;
     width: 100%;
-    background: transparent;
-    transition: background 0.5s ease; }
-    .image .overlay button {
-      opacity: 0;
-      margin: 20px;
+    border-bottom: 1px solid #ddd; }
+    .galleryIndex .image:first-child p {
+      display: none; }
+  .galleryIndex .image ~ .image {
+    height: 200px;
+    max-width: 32.5%;
+    overflow: hidden; }
+    .galleryIndex .image ~ .image p {
+      margin: 0;
+      color: #888; }
+    .galleryIndex .image ~ .image img {
+      margin-bottom: 10px; }
+    .galleryIndex .image ~ .image:nth-child(2n) {
+      margin: 10px 0; }
+    .galleryIndex .image ~ .image:nth-child(odd) {
+      margin: 10px 5px; }
+    .galleryIndex .image ~ .image:nth-child(n + 5) {
+      border: none; }
+
+.galleryDetail {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start; }
+  .galleryDetail .image {
+    display: inline-block;
+    position: relative;
+    margin: 0;
+    height: auto;
+    width: 100%;
+    max-height: 400px;
+    overflow: hidden; }
+    .galleryDetail .image .overlay {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
       background: transparent;
-      border: 2px solid white;
-      color: white;
-      transition: all 0.5s ease; }
-  .image:hover .overlay {
-    background-color: rgba(0, 0, 0, 0.3); }
-  .image:hover .overlay button {
-    opacity: 1; }
+      transition: background 0.5s ease; }
+      .galleryDetail .image .overlay img {
+        max-width: 100%;
+        max-height: 200px; }
+      .galleryDetail .image .overlay button {
+        opacity: 0;
+        margin-right: 20px;
+        background: transparent;
+        border: 2px solid white;
+        color: white;
+        transition: all 0.5s ease; }
+      .galleryDetail .image .overlay button ~ button {
+        margin: 0; }
+    .galleryDetail .image:hover .overlay {
+      background-color: rgba(0, 0, 0, 0.5); }
+    .galleryDetail .image:hover .overlay button {
+      opacity: 1;
+      cursor: pointer; }

@@ -1,8 +1,9 @@
-<div class="gallery">
+<div class="galleryIndex">
   {{#if photos}}
   {{#each photos}}
   <div class="image">
     <a href='/gallery/{{id}}'><img src='{{link}}' alt='img'></a>
+    <p>{{title}}</p>
   </div>
   {{/each}}
   {{else}}

@@ -38,16 +38,10 @@ router.get('/gallery/:id', (req, res) => {
   Photos.findById(photoId, { include: [Authors] })
   .then( photo => {
     let photoObj = {
-      photo: photo,
-      others: []
+      photo: photo
     };
-
-    findOthers(req, res)
-    .then( photos => {
-      console.log('***********', photos);
-    });
-  res.render('./templates/photo', photoObj);
-});
+    res.render('./templates/photo', photoObj);
+  });
 });
 
 
