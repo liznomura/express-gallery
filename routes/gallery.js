@@ -53,15 +53,18 @@ router.get('/gallery/:id', (req, res) => {
   findAllPhotos(req, res)
   .then( photos =>{
     let photoId = parseInt(req.params.id);
+    let user = req.user;
 
     let mainPhoto = photos.filter( photo => { return photoId === photo.id; });
     let otherPhotos = photos.filter( photo => { return photoId !== photo.id; });
+    let isOp = mainPhoto[0].user_id === user.id;
 
     let photoObj = {
       mainPhoto: mainPhoto,
-      otherPhotos: otherPhotos
+      otherPhotos: otherPhotos,
+      isOp: isOp
     };
-
+    console.log(photoObj);
     res.render('./templates/photo', photoObj);
   })
   .catch( err =>{
@@ -73,13 +76,17 @@ router.get('/gallery/:id/edit', Utilities.isAuthenticated, (req, res) =>{
   let user = req.user;
   let photoId = req.params.id;
 
-  return Photos.findById(photoId, { include: { model: Authors } })
+  Photos.findById(photoId, { include: { model: Authors } })
   .then( photo => {
     let photoObj = {
-      photo: photo
+      id: photo.id,
+      title: photo.title,
+      link: photo.link,
+      description: photo.description,
+      user_id: photo.user_id,
+      author_id: photo.author_id,
+      author: photo.author.author
     };
-
-    if(photo.user_id !== user.id) { }
 
       res.render('./templates/edit', photoObj);
   });
