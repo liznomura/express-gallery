@@ -7,6 +7,7 @@ const session = require('express-session');
 const Login = require('./login');
 const Utilities = require('./utilities.js');
 
+
 const router = express.Router();
 
 let db = require('../models');
@@ -21,6 +22,7 @@ router.get('/', (req, res) => {
     let photosObj = {
       photos: photos
     };
+
     res.render('./templates/index', photosObj);
   });
 });
@@ -33,16 +35,30 @@ router.get('/gallery/new', ( req, res ) => {
 
 router.get('/gallery/:id', (req, res) => {
   let photoId = req.params.id;
-  Photos.findAll({ include: { model: Users } })
-  .then( photos => {
-    res.redirect('/');
-  });
+  Photos.findById(photoId, { include: [Authors] })
+  .then( photo => {
+    let photoObj = {
+      photo: photo,
+      others: []
+    };
+
+    findOthers(req, res)
+    .then( photos => {
+      console.log('***********', photos);
+    });
+  res.render('./templates/photo', photoObj);
 });
+});
+
 
 router.get('/gallery/:id/edit', (req, res) => {
   findPhoto(req, res)
   .then( photo => {
-    res.render('./templates/edit', photo);
+    let photoObj = {
+      photo: photo
+    };
+
+    res.render('./templates/edit', photoObj);
   });
 });
 
@@ -51,7 +67,8 @@ router.post('/gallery', Utilities.isAuthenticated, (req, res) => {
   findAuthor(req, res)
   .then( author => {
     Photos.create(
-      { author_id: author.id,
+      { title: req.body.title,
+        author_id: author.id,
         link: req.body.link,
         description: req.body.description,
         user_id: req.user.id }
@@ -96,6 +113,7 @@ module.exports = router;
 function findAuthor( req, res ) {
   return Authors.find({ where: { author: req.body.author } })
   .then( author => {
+    console.log(author);
     if(author){
       return author;
     } else {
@@ -106,10 +124,12 @@ function findAuthor( req, res ) {
   });
 }
 
-function findPhoto( req, res ) {
+function findPhoto(req, res) {
   let photoId = req.params.id;
-  return Photos.findOne({
-    where: {id: photoId },
-    include: [{model: Users}, {model: Authors}]
-  });
+  return Photos.findOne({ where: { id: req.params.id }}, { include: { model: Authors } });
+}
+
+function findOthers( req, res ) {
+  console.log(req.params.id);
+  return Photos.findAll({ where: { id: { $ne: req.params.id } } }, { include: { model: Authors } });
 }

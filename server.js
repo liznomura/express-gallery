@@ -28,7 +28,7 @@ let PORT = process.env.PORT || 9000;
 const hbs = exphbs.create({
   defaultLayout: 'main',
   extname: 'hbs'
-});
+  });
 
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
@@ -79,13 +79,11 @@ passport.use(new LocalStrategy((username, password, done) => {
   .catch( err => { console.log('error: ', err); });
 }));
 
-
 app.use('/', galleryRouter);
 app.use('/', loginRouter);
 app.use('/', registerRouter);
 
 app.listen(PORT, () => {
-  // db.sequelize.drop();
   db.sequelize.sync();
 
   console.log(`Server running on ${PORT}`);

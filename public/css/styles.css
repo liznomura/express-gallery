@@ -5,13 +5,13 @@ body {
 
 h1 {
   font-size: 70px;
-  color: #888;
   letter-spacing: 0.1em;
+  color: #888;
   margin: 0; }
 
 .container {
   margin: 50px auto;
-  width: 50%; }
+  width: 80%; }
 
 .header {
   display: flex;
@@ -20,13 +20,45 @@ h1 {
   border-top: 1px dotted #ddd;
   padding: 0;
   margin-bottom: 80px; }
+  .header .logo {
+    padding: 10px 0;
+    margin-right: 20px; }
+  .header .welcome {
+    width: 40%;
+    margin: 10px 0;
+    padding: 0 15px;
+    border-left: 1px solid #ddd; }
 
-.logo {
-  padding: 10px 0;
-  margin-right: 20px; }
+.gallery {
+  display: flex;
+  justify-content: flex-start; }
 
-.welcome {
-  width: 40%;
-  margin: 10px 0;
-  padding: 0 15px;
-  border-left: 1px solid #ddd; }
+.image {
+  display: inline-block;
+  position: relative;
+  margin: 0;
+  height: auto;
+  width: auto;
+  overflow: hidden; }
+  .image .overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: transparent;
+    transition: background 0.5s ease; }
+    .image .overlay button {
+      opacity: 0;
+      margin: 20px;
+      background: transparent;
+      border: 2px solid white;
+      color: white;
+      transition: all 0.5s ease; }
+  .image:hover .overlay {
+    background-color: rgba(0, 0, 0, 0.3); }
+  .image:hover .overlay button {
+    opacity: 1; }
