@@ -17,12 +17,9 @@ let Photos = db.photos;
 
 
 router.get('/', (req, res) => {
-  Photos.findAll({ include: { model: Authors } })
-  .then( photos => {
-    let photosObj = {
-      photos: photos
-    };
-
+  findAllPhotos(req, res)
+  .then(photos => {
+    let photosObj = { photos: photos };
     res.render('./templates/index', photosObj);
   });
 });
@@ -47,30 +44,51 @@ router.get('/gallery/new', ( req, res ) => {
 });
 
 
-router.get('/success', isAuthenticated, (req, res) =>{
+router.get('/success', Utilities.isAuthenticated, (req, res) =>{
   res.render('./templates/success', photosObj);
 });
 
 
 router.get('/gallery/:id', (req, res) => {
-  let photoId = req.params.id;
-  Photos.findById(photoId, { include: [Authors] })
-  .then( photo => {
+  findAllPhotos(req, res)
+  .then( photos =>{
+    let photoId = parseInt(req.params.id);
+    let user = req.user;
+
+    let mainPhoto = photos.filter( photo => { return photoId === photo.id; });
+    let otherPhotos = photos.filter( photo => { return photoId !== photo.id; });
+    let isOp = mainPhoto[0].user_id === user.id;
+
     let photoObj = {
-      photo: photo
+      mainPhoto: mainPhoto,
+      otherPhotos: otherPhotos,
+      isOp: isOp
     };
+    console.log(photoObj);
     res.render('./templates/photo', photoObj);
+  })
+  .catch( err =>{
+    console.log(err);
   });
 });
 
 router.get('/gallery/:id/edit', Utilities.isAuthenticated, (req, res) =>{
-  findPhoto(req, res)
+  let user = req.user;
+  let photoId = req.params.id;
+
+  Photos.findById(photoId, { include: { model: Authors } })
   .then( photo => {
     let photoObj = {
-      photo: photo
+      id: photo.id,
+      title: photo.title,
+      link: photo.link,
+      description: photo.description,
+      user_id: photo.user_id,
+      author_id: photo.author_id,
+      author: photo.author.author
     };
 
-    res.render('./templates/edit', photoObj);
+      res.render('./templates/edit', photoObj);
   });
 });
 
@@ -97,12 +115,12 @@ router.put('/gallery/:id', Utilities.isAuthenticated, (req, res) => {
   findAuthor(req, res)
   .then( author => {
     Photos.update(
-    { author_id: author.id,
-      user_id: req.user.id,
-      link: req.body.link,
-      description: req.body.description
-    },
-    { where: { id: photoId } });
+      { author_id: author.id,
+        user_id: req.user.id,
+        link: req.body.link,
+        description: req.body.description
+      },
+      { where: { id: photoId } });
   });
   res.redirect(`/gallery/${req.params.id}`)
   .catch(err => {
@@ -136,12 +154,27 @@ function findAuthor( req, res ) {
   });
 }
 
-function findPhoto(req, res) {
-  let photoId = req.params.id;
-  return Photos.findOne({ where: { id: req.params.id }}, { include: { model: Authors } });
+function findAllPhotos( req, res ) {
+  return Photos.findAll({ include: { model: Authors } })
+  .then( photosList => {
+
+    let photos = [];
+
+    photosList.forEach( photo => {
+      return photos.push({
+        id: photo.id,
+        title: photo.title,
+        link: photo.link,
+        description: photo.description,
+        user_id: photo.user_id,
+        author_id: photo.author_id,
+        author: photo.author.author });
+    });
+
+    return photos;
+  });
 }
 
 function findOthers( req, res ) {
-  console.log(req.params.id);
   return Photos.findAll({ where: { id: { $ne: req.params.id } } }, { include: { model: Authors } });
 }
