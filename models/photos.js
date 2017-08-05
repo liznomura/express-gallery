@@ -14,6 +14,12 @@ module.exports = function(sequelize, DataTypes) {
   Photo.associate = function(models) {
     Photo.belongsTo(models.authors,  {
       foreignKey: {
+        name: 'user_id',
+        allowNull: false
+      }
+    });
+    Photo.belongsTo(models.authors,  {
+      foreignKey: {
         name: 'author_id',
         allowNull: false
       }

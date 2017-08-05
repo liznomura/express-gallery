@@ -27,9 +27,28 @@ router.get('/', (req, res) => {
   });
 });
 
+router.get('/login', (req, res)=> {
+  res.render('./templates/login');
+});
+
+router.get('/success', (req, res)=> {
+  res.render('./templates/success');
+});
+
+router.post('/login', passport.authenticate('local',{
+  successRedirect: '/success',
+  failureRedirect: '/login'
+}));
+
+
 
 router.get('/gallery/new', ( req, res ) => {
   res.render('./templates/new');
+});
+
+
+router.get('/success', isAuthenticated, (req, res) =>{
+  res.render('./templates/success', photosObj);
 });
 
 
@@ -44,8 +63,7 @@ router.get('/gallery/:id', (req, res) => {
   });
 });
 
-
-router.get('/gallery/:id/edit', (req, res) => {
+router.get('/gallery/:id/edit', Utilities.isAuthenticated, (req, res) =>{
   findPhoto(req, res)
   .then( photo => {
     let photoObj = {
@@ -79,8 +97,8 @@ router.put('/gallery/:id', Utilities.isAuthenticated, (req, res) => {
   findAuthor(req, res)
   .then( author => {
     Photos.update(
-    {
-      author_id: author.id,
+    { author_id: author.id,
+      user_id: req.user.id,
       link: req.body.link,
       description: req.body.description
     },
