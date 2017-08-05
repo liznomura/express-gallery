@@ -4,13 +4,13 @@
     <div class="image">
       <img src='{{link}}' alt='img'>
       <div class="overlay">
-      {{!-- {{#if isOp}} --}}
+      {{#if isOp}}
         <form action="/gallery/{{id}}?_method=DELETE" method="POST">
           <input type="hidden" name="id" value={{id}}>
           <button type="submit">Remove</button>
         </form>
         <a href="/gallery/{{id}}/edit"><button type="button">Edit</button></a>
-      {{!-- {{/if}} --}}
+      {{/if}}
       </div>
     </div>
     <div class="text">
